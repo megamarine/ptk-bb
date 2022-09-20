@@ -1,11 +1,11 @@
 <?php
 $PERIODE      = date("Y-m-01");
 $PERIODE2     = date("Y-m-d");
-$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
-$dept         = $_SESSION["LOGINDEP_PERSONALIA_BB"];
-$div          = $_SESSION["LOGINDIV_PERSONALIA_BB"];
-$akses        = $_SESSION["LOGINAKS_PERSONALIA_BB"];
-$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA_BB"];
+$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA"];
+$dept         = $_SESSION["LOGINDEP_PERSONALIA"];
+$div          = $_SESSION["LOGINDIV_PERSONALIA"];
+$akses        = $_SESSION["LOGINAKS_PERSONALIA"];
+$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA"];
 $where_clause = "";
 
 //filter akses ptk view
@@ -27,7 +27,19 @@ if (isset($_POST["cari"]))
 {
     $PERIODE    = $_POST["PERIODE"];
     $PERIODE2   = $_POST["PERIODE2"];
+    if (isset($_POST["SEC"]) && $_POST['SEC'] != '0'){
+        $section = $_POST["SEC"];
+        $where_clause .= "and f.kode_section = '$section'";
+    }
+    if (isset($_POST["LEV"]) && $_POST['LEV'] != '0'){
+        $level = $_POST["LEV"];
+        $where_clause .= "and j.kode_level = '$level'";
+    }
+
+    echo $where_clause;
+     
 }
+
 ?>
 <!-- FILTER ----------------------------------------------------------------------------------->
 
@@ -48,22 +60,74 @@ if (isset($_POST["cari"]))
 <form role="form" action="" method="post">
     <div class="row" align="left">
         <div class="col-md-2">
+            <label>From</label>
         </div>
-        <div class="col-md-10">
-            <label for="PERIODE">Input Period PTK :</label>
+        <div class="col-md-2">
+            <label>To</label>
+        </div>
+        <div class="col-md-2">
+            <label>Section</label>
+        </div>
+        <div class="col-md-2">
+            <label>Level</label>
         </div>
     </div>
     <div class="row" align="center">
         <div class="col-md-2">
-        </div>
-        <div class="col-md-3">
             <div class="form-group">
                 <input type="date" class="form-control" name="PERIODE" id="PERIODE" value="<?php echo $PERIODE; ?>" />
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <input type="date" class="form-control" name="PERIODE2" id="PERIODE2" value="<?php echo $PERIODE2; ?>" />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group" align="left">
+                <select class="form-control" id="SEC" name="SEC">
+                    <option value="0" style="background-color:lightgrey">Choose Section</option>
+                    <?php
+                    $result = GetQuery("select 
+                                               b.kode_section,
+                                               f.nama_section
+                                          from  t_ptk b 
+                                          left join m_section f ON b.kode_section = f.kode_section
+                                        WHERE (b.date_ptk BETWEEN '$PERIODE' AND '$PERIODE2') $where_clause
+                                      group by b.kode_section
+                                    order by f.nama_section asc");
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC))
+                    {
+                        ?>
+                            <option value="<?=$row['kode_section'];?>"> <?=$row["nama_section"];?> </option>
+                        <?php
+                    }
+                    ?>                
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group" align="left">
+                <select class="form-control" id="LEV" name="LEV">
+                    <option value="0" style="background-color:lightgrey">Choose Level</option>
+                    <?php
+                    
+                    $result = GetQuery("select
+                                               b.kode_level,
+                                               j.nama_level
+                                    from t_ptk b
+                                     left join m_level j ON b.kode_level = j.kode_level
+                                         WHERE (b.date_ptk BETWEEN '$PERIODE' AND '$PERIODE2') $where_clause
+                                      group by b.kode_level
+                                      order by j.nama_level asc");
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC))
+                    {
+                        ?>
+                            <option value="<?=$row['kode_level'];?>"> <?=$row["nama_level"];?> </option>
+                        <?php
+                    }
+                    ?>                
+                </select>
             </div>
         </div>
         <div class="col-md-3" align="left">
@@ -86,7 +150,7 @@ if (isset($_POST["cari"]))
     </div>
     <div class="row" align="center">
         <div class="btn-group" style="margin-bottom:5px;">
-            <a href="laporan_pemenuhan" type="button" class="btn btn-primary">Report Pemenuhan <i class="fas fa-share"></i> </a>
+            <a href="laporan_pemenuhan" type="button" class="btn btn-primary">Report Pemenuhan <i class="fas fa-share"></i></a>
         </div>
     </div>
 </form>
@@ -118,7 +182,6 @@ if (isset($_POST["cari"]))
             </tr>
         </thead>
         <tbody>
-
             <?php
             $result = GetQuery(
                             "select b.*,
@@ -183,7 +246,7 @@ if (isset($_POST["cari"]))
                     <td align="left" style="white-space:nowrap"><?= $row["nama_unit"]; ?></td>
                     <td align="left" style="white-space:nowrap"><?= $row["nama_level"]; ?></td>
                     <td align="left" style="white-space:nowrap"><?= $row["nama_grade"]." ".$row["ket_grade"]; ?></td>
-                    <td align="left" style="white-space:nowrap"><?= $row["qty_submition"]." orang"; ?></td>
+                    <td align="left" style="white-space:nowrap"><?= $row["qty_submition"]; ?></td>
                     <td align="left" style="white-space:nowrap"><?= $row["qty_accepted"]; ?></td>
                     <td align="left" style="white-space:nowrap"><?= $row["qty_left"]; ?></td>
                     <td align="left" style="white-space:nowrap"><?= $row["status_approval"]; ?></td>

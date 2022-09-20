@@ -10,28 +10,79 @@
 $(document).ready(function() {
     $('#tes').DataTable( {
         "order": [[ 2, "desc" ]]
-    } );
-} );
+    });
+    //Modal Form Pemenuhan
+    $("#form-pemenuhan").submit(function (event) {
+        var formData = {
+            seq: $("#seq-ptk").val(),
+            date_accepted: $("#date_accepted").val(),
+            id_accepted: $("#id_accepted").val(),
+            name_accepted: $("#name_accepted").val(),
+            gender: $("#gender").val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "pemenuhan.php",
+            data: formData,
+            dataType: "json",
+            encode: true,
+        }).done(function (data) {
+            if (data.success == true && data.seq != false) {
+                $.ajax({
+                    type: "POST",
+                    url: "cek_pemenuhan.php",
+                    data:'seq='+data.seq,
+                    success: function(data){
+                        $("#PEMENUHAN").html(data);
+                    }
+                }).done(function (res){
+                  $.ajax({
+                    type: "POST",
+                    url: "sendEmail.php",
+                    data: "seq="+data.seq,
+                    encode: true
+                  }).done(function (res){
+                    if (res.success){
+                        console.log(res.message);
+                    }
+                  }).fail(function(xhr, status, error){
+                    console.log(error);
+                  })
+                });
+            } else {
+                alert(data.message);
+            }
+        }).fail(function(xhr, status, error) {
+            alert("Save Failed Server Error");
+        });
+
+    event.preventDefault();
+  });
+});
+
 
 function getPEMENUHAN(val)
-{
-  $.ajax({
-  type: "POST",
-  url: "cek_pemenuhan.php",
-  data:'seq='+val,
-  success: function(data){
-    $("#PEMENUHAN").html(data);
-  }
-  });
+    {
+    $.ajax({
+    type: "POST",
+    url: "cek_pemenuhan.php",
+    data:'seq='+val,
+    success: function(data){
+        $("#PEMENUHAN").html(data);
+    }
+    });
 }
+
+
 </script>
 
 <?php
-$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
-$dept         = $_SESSION["LOGINDEP_PERSONALIA_BB"];
-$div          = $_SESSION["LOGINDIV_PERSONALIA_BB"]; 
-$akses        = $_SESSION["LOGINAKS_PERSONALIA_BB"];
-$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA_BB"];
+$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA"];
+$dept         = $_SESSION["LOGINDEP_PERSONALIA"];
+$div          = $_SESSION["LOGINDIV_PERSONALIA"]; 
+$akses        = $_SESSION["LOGINAKS_PERSONALIA"];
+$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA"];
 $where_clause = "";
 $where_clause_deleted = "";
 
@@ -215,7 +266,7 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
                             ?>
                             <tr>
                                 <?php
-                                if ($akses == "Administrator" or $row["created_by"] == $ID_USER1 or $_SESSION["LOGINAKS_PERSONALIA_BB"] == "MD")
+                                if ($akses == "Administrator" or $row["created_by"] == $ID_USER1 or $_SESSION["LOGINAKS_PERSONALIA"] == "MD")
                                 {
                                 ?>
                                 <td align="center" style="white-space:nowrap">
@@ -477,7 +528,6 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
                                     ?>
                                     <td align="center" style="white-space:nowrap">
                                         <i title="Tunggu Proses Pemenuhan" class="fas fa-thumbs-up fa-lg fa-2x" style="color: green;"></i><br>
-
                                     </td>
                                     <?php
                                     }
@@ -1062,7 +1112,7 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
           </div>
           <div class="modal-footer">
             <button type="submit" name="simpan" class="btn" style="background-color:#337AB7;color: white;"><i class="fa fa-save"></i> Save</button>&nbsp&nbsp&nbsp
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i></button>
           </div>
       </form>
     </div>
@@ -1099,7 +1149,7 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
           </div>
           <div class="modal-footer">
             <button type="submit" name="simpan" class="btn" style="background-color:#337AB7;color: white;"><i class="fa fa-save"></i> Save</button>&nbsp&nbsp&nbsp
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i></button>
           </div>
       </form>
     </div>
@@ -1119,8 +1169,8 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
             </div>
       </div>
       <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i></button>
+      </div>
     </div>
   </div>
 </div>
@@ -1132,11 +1182,11 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
       <div class="modal-header text-center" style="background-color:#337AB7;">
         <h4 class="semibold modal-title" style="color:white">Pemenuhan <b id="seq"></b></h4>
       </div>
-      <form role="form" action="pemenuhan" method="post" data-parsley-validate>
+      <form id="form-pemenuhan" role="form" action="pemenuhan.php" method="post" data-parsley-validate>
           <div class="modal-body" id="PEMENUHAN"></div>
           <div class="modal-footer">
-            <button type="submit" name="simpanpemenuhan" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>&nbsp&nbsp&nbsp
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit"  class="btn btn-primary"><i class="fa fa-save"></i> Save</button>&nbsp&nbsp&nbsp
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i></button>
           </div>
       </form>
     </div>

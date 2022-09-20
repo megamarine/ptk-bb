@@ -1,3 +1,35 @@
+<script type="text/javascript">
+// Function Delete
+
+function rmvData(seq, urut){
+	result = confirm('Yakin Delete Pemenuhan ?');
+	if (result){
+		$.ajax({
+            type: "GET",
+            url: "hapus_pemenuhan.php",
+            data: 'seq='+seq+'&urut='+urut,
+            dataType: "json",
+            encode: true,
+        }).done(function(data) {
+			if (data.success == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "cek_pemenuhan.php",
+                    data:'seq='+seq,
+                    success: function(data){
+                        $("#PEMENUHAN").html(data);
+                    }
+                });
+            } else {
+                alert(data.message);
+            }
+		}).fail(function(xhr, status, error) {
+            alert("Delete Failed Server Error");
+        });
+	}
+ }
+</script>
+
 <?php require_once("module/model/koneksi/koneksi.php");
 
 	if(!empty($_POST["seq"])) 
@@ -17,7 +49,7 @@
 				<div class="form-group">
 		            Qty permintaan : <b><?=$qty_submition;?></b> | Sudah diterima : <b style="color:green"><?=$qty_accepted;?></b> | Qty kekurangan : <b style="color:red"><?=$qty_left;?></b>
 		            <hr style="border-width: 1px 1px 0; border-style: solid; border-color: darkgrey;">
-		            <input type="hidden" required="" class="form-control" id="seq" name="seq" value="<?=$seq;?>">
+		            <input type="hidden" required="" class="form-control" id="seq-ptk" name="seq-ptk" value="<?=$seq;?>">
 		        </div>
 	    	</div>
 	    </div>
@@ -97,7 +129,7 @@
 	                        <td style="white-space:nowrap;text-align:left;"><?=$rowd["nama_user"];?></td>
 	                        <td style="white-space:nowrap;text-align:left;"><?=$rowd["created_date"];?></td>
 							<td style="white-space:nowrap;text-align:center;">
-								<a href="hapus_pemenuhan?seq=<?=$seq;?>&&urut=<?=$urut;?>" onclick="return confirm('Confirm delete ?')"><i class="fa fa-trash fa-lg" style="color:red"></i></a>
+								<i class="fa fa-trash fa-lg" onclick="rmvData('<?=$seq; ?>','<?=$urut; ?>')" style="color:red"></i>
 							</td>
 	                    </tr>
 	                <?php
