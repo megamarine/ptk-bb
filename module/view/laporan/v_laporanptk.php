@@ -1,11 +1,11 @@
 <?php
 $PERIODE      = date("Y-m-01");
 $PERIODE2     = date("Y-m-d");
-$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA"];
-$dept         = $_SESSION["LOGINDEP_PERSONALIA"];
-$div          = $_SESSION["LOGINDIV_PERSONALIA"];
-$akses        = $_SESSION["LOGINAKS_PERSONALIA"];
-$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA"];
+$ID_USER1     = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
+$dept         = $_SESSION["LOGINDEP_PERSONALIA_BB"];
+$div          = $_SESSION["LOGINDIV_PERSONALIA_BB"];
+$akses        = $_SESSION["LOGINAKS_PERSONALIA_BB"];
+$ptk_view     = $_SESSION["LOGINPTKVIEW_PERSONALIA_BB"];
 $where_clause = "";
 
 //filter akses ptk view
