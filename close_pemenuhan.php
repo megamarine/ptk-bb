@@ -76,16 +76,16 @@ if(isset($_GET["seq"]))
         $mail->isSendmail();
         set_time_limit(120);
         
-        $mail->setFrom('no-reply@megamarinepride.com','PTK Closed');
-        $mail->addAddress("generalhrm@megamarinepride.com");
-        $mail->addCC("recruitment@megamarinepride.com");
+        $mail->setFrom('no-reply@baramudabahari.com','PTK Closed');
+        $mail->addAddress("generalhrm@baramudabahari.com");
+        $mail->addCC("recruitment@baramudabahari.com");
         $mail->Subject = "PTK ".$seq." Closed";
         $message = file_get_contents("mail_template.html");
         if (isset($row['nama_user'])){
             $message = str_replace('%username%', "Username", $message);
             $mail->addAddress($row['email']);
-            $mail->addCC("generalhrm@megamarinepride.com");
-            $mail->addCC("recruitment@megamarinepride.com");
+            $mail->addCC("generalhrm@baramudabahari.com");
+            $mail->addCC("recruitment@baramudabahari.com");
         }
         $message = str_replace('%ptk_name%', $seq, $message);
         $link = "http://192.168.10.167/bb/personalia/edit_ptk?seq=".$seq;
