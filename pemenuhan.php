@@ -1,7 +1,7 @@
 <?php
 require_once("module/model/koneksi/koneksi.php");
 
-if(!isset($_SESSION["LOGINIDUS_PERSONALIA"]))
+if(!isset($_SESSION["LOGINIDUS_PERSONALIA_BB"]))
 {   
     session_destroy();
     header("Location: index.php");
@@ -18,9 +18,9 @@ if(isset($_POST["seq"]))
     $id_accepted   = $_POST["id_accepted"];
     $name_accepted = $_POST["name_accepted"];
     $gender        = $_POST["gender"];
-    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA"];
-    $NAMA_USER     = $_SESSION["LOGINNAMAUS_PERSONALIA"];
-    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA"];
+    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
+    $NAMA_USER     = $_SESSION["LOGINNAMAUS_PERSONALIA_BB"];
+    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA_BB"];
 
     $result = $db1->prepare("select qty_submition, qty_accepted from t_ptk where seq = '$seq'");
     $result->execute();
