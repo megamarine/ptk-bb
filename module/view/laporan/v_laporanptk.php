@@ -27,16 +27,6 @@ if (isset($_POST["cari"]))
 {
     $PERIODE    = $_POST["PERIODE"];
     $PERIODE2   = $_POST["PERIODE2"];
-    if (isset($_POST["SEC"]) && $_POST['SEC'] != '0'){
-        $section = $_POST["SEC"];
-        $where_clause .= "and f.kode_section = '$section'";
-    }
-    if (isset($_POST["LEV"]) && $_POST['LEV'] != '0'){
-        $level = $_POST["LEV"];
-        $where_clause .= "and j.kode_level = '$level'";
-    }
-
-    echo $where_clause;
      
 }
 
@@ -183,6 +173,16 @@ if (isset($_POST["cari"]))
         </thead>
         <tbody>
             <?php
+
+        if (isset($_POST["SEC"]) && $_POST['SEC'] != '0'){
+            $section = $_POST["SEC"];
+            $where_clause .= "and f.kode_section = '$section'";
+        }
+        if (isset($_POST["LEV"]) && $_POST['LEV'] != '0'){
+            $level = $_POST["LEV"];
+            $where_clause .= "and j.kode_level = '$level'";
+        }
+
             $result = GetQuery(
                             "select b.*,
                                     date_format(b.date_ptk, '%d %b %Y') as date_ptk,

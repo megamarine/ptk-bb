@@ -1,6 +1,6 @@
 <?php 
 require_once("module/model/koneksi/koneksi.php");
-if(!isset($_SESSION["LOGINIDUS_PERSONALIA"]))
+if(!isset($_SESSION["LOGINIDUS_PERSONALIA_BB"]))
 {   
     session_destroy();
     header("Location: index.php");
