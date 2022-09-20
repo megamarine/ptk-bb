@@ -1,7 +1,7 @@
 <?php
 require_once("module/model/koneksi/koneksi.php");
 
-if(!isset($_SESSION["LOGINIDUS_PERSONALIA"]))
+if(!isset($_SESSION["LOGINIDUS_PERSONALIA_BB"]))
 {
     header("Location: index.php");
     die(0);
@@ -13,8 +13,8 @@ $DINO = date('Y-m-d H:i:s');
 if(isset($_GET["seq"]) && isset($_GET["urut"]))
 {
     $DINO          = date('Y-m-d H:i:s');
-    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA"];
-    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA"];
+    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
+    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA_BB"];
     $seq           = $_GET["seq"];
     $urut          = $_GET["urut"];
 

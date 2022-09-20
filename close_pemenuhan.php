@@ -1,7 +1,7 @@
 <?php
 require_once("module/model/koneksi/koneksi.php");
 
-if(!isset($_SESSION["LOGINIDUS_PERSONALIA"]))
+if(!isset($_SESSION["LOGINIDUS_PERSONALIA_BB"]))
 {
     ?><script>alert('Silahkan login dahulu');</script><?php
     ?><script>document.location.href='index.php';</script><?php
@@ -13,8 +13,8 @@ $DINO = date('Y-m-d H:i:s');
 if(isset($_GET["seq"]))
 {
     $DINO          = date('Y-m-d H:i:s');
-    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA"];
-    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA"];
+    $ID_USER1      = $_SESSION["LOGINIDUS_PERSONALIA_BB"];
+    $IP_ADDRESS    = $_SESSION["IP_ADDRESS_PERSONALIA_BB"];
     $seq           = $_GET["seq"];
     
     $result = $db1->prepare("select qty_left from t_ptk where seq = '$seq'");
