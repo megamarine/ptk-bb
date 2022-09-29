@@ -266,7 +266,7 @@ while ($row_querymd = $querymd->fetch(PDO::FETCH_ASSOC))
                             ?>
                             <tr>
                                 <?php
-                                if ($akses == "Administrator" or $row["created_by"] == $ID_USER1 or $_SESSION["LOGINAKS_PERSONALIA"] == "MD")
+                                if ($akses == "Administrator" or $row["created_by"] == $ID_USER1 or $_SESSION["LOGINAKS_PERSONALIA_BB"] == "MD")
                                 {
                                 ?>
                                 <td align="center" style="white-space:nowrap">
